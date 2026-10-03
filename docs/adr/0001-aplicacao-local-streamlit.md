@@ -1,6 +1,6 @@
 # ADR 0001 — Aplicação local com Streamlit
 
-Data: 02/10/2026. Estado: aceita como direção inicial; integração iOS condicionada à prova de viabilidade.
+Data: 02/10/2026. Estado: decisão inicial, parcialmente substituída pela [ADR 0002](0002-docker-agente-e-eventos.md) para mapa, Docker e integração. A opção Streamlit permanece; a integração física continua pendente.
 
 ## Contexto
 
@@ -18,7 +18,7 @@ Não adicionar FastAPI ou SPA ao MVP. Executar painel em 127.0.0.1:8501, com por
 - Reexecuções do Streamlit exigem consumo explícito de eventos e proteção de efeitos externos.
 - Hardware e serviços locais continuam necessários; hospedar apenas o painel na nuvem não resolve a comunicação.
 - Persistência inicialmente em memória; reinício deixa o estado do aparelho desconhecido.
-- Versões e integração API/CLI só serão escolhidas após testes.
+- Na decisão inicial, versões e integração API/CLI seriam escolhidas após testes. A implementação experimental fixou versões diretas e CLI/worker na ADR 0002; a validação física permanece pendente.
 - Se o componente não representar novos cliques na mesma coordenada, adaptar a captura de eventos mantendo o comportamento definido.
 
 ## Alternativas

@@ -19,8 +19,10 @@ Sem prazo fechado antes da prova física.
 - [ ] Registrar ambiente real e versões.
 - [ ] Validar USB: descoberta, autorização, set e clear.
 - [ ] Validar Wi-Fi sem cabo após pareamento.
-- [ ] Verificar evento streamlit-folium: rerun, zoom e clique repetido na mesma coordenada.
-- [ ] Fixar dependências compatíveis e escolher integração API/CLI no adaptador.
+- [x] Verificar a lógica de eventos do componente Leaflet: um UUID por gesto, bloqueio durante envio e repetição de coordenada (teste Node com substitutos).
+- [ ] Validar visualmente mapa, iframe, zoom, rerun e marcador no navegador do Windows.
+- [x] Fixar dependências diretas para a implementação experimental e escolher CLI com worker persistente.
+- [ ] Confirmar compatibilidade dessas versões no aparelho e considerar lockfile transitivo.
 - [x] Implementar modelos e gateway falso.
 - [x] Implementar interface inicial com processamento de evento único.
 - [ ] Validar o adaptador experimental com hardware; bloqueio e timeout já implementados.

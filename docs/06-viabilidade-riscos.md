@@ -13,7 +13,7 @@ A documentação upstream descreve simulação de localização e transportes US
 
 Preencher com versão de Python, pacote, drivers, modelo do aparelho, data, procedimento e evidência sanitizada.
 
-## Prova de viabilidade — primeiro trabalho de desenvolvimento
+## Prova de viabilidade — próxima etapa com hardware
 
 1. Registrar Windows, iPhone, versão/build do iOS e versões dos componentes.
 2. Consultar instalação e transporte da versão atual da biblioteca; preparar drivers, autorização e serviços necessários.
@@ -28,13 +28,13 @@ Se a simulação for aceita pelo serviço mas não pelo jogo, registrar “envio
 
 ## Critério para avançar
 
-Adaptador real do MVP exige evidência de conectar, set e clear nos dois transportes. A interface em demonstração pode avançar independentemente. Falha em um transporte exige investigação ou revisão explícita de escopo; não marcar MVP completo com um transporte ausente.
+O adaptador experimental já foi implementado. Considerá-lo validado para o MVP exige evidência de conectar, set e clear nos dois transportes. A interface em demonstração pode avançar independentemente. Falha em um transporte exige investigação ou revisão explícita de escopo; não marcar MVP completo com um transporte ausente.
 
 ## Riscos e resposta
 
 | Risco | Impacto | Resposta |
 | --- | --- | --- |
-| Incompatibilidade iOS/biblioteca | Bloqueia dispositivo | Prova física antes do adaptador; fixar versões validadas |
+| Incompatibilidade iOS/biblioteca | Bloqueia dispositivo | Validar fisicamente o adaptador experimental; revisar as versões fixadas conforme resultado |
 | Aplicativo rejeita simulação | Objetivo de uso não alcançado | Teste separado; não inferir aceitação nem incluir ocultação da simulação |
 | Rerun repete comando | Envios inesperados | IDs de eventos, estado e testes de rerun |
 | Cliques rápidos e abas concorrentes | Ordem incorreta | Bloqueio por dispositivo; sem fila silenciosa |
@@ -45,4 +45,4 @@ Adaptador real do MVP exige evidência de conectar, set e clear nos dois transpo
 
 ## Modelo de registro de experimento
 
-Copiar [modelo de experimento](templates/experimento.md). Nesta fase, comandos exatos do adaptador e privilégios necessários serão definidos a partir da versão testada, em vez de documentar uma receita universal não comprovada.
+Copiar [modelo de experimento](templates/experimento.md). A versão experimental e os comandos previstos estão descritos no [guia Windows/Docker](09-execucao-windows-docker.md). Privilégios e preparação efetivamente necessários ainda devem ser confirmados no ambiente físico; o guia não representa uma receita universal comprovada.

@@ -4,9 +4,13 @@ Aplicação local em camadas leves, dentro de um único projeto Python. Streamli
 
 ```mermaid
 flowchart TD
-    UI["Streamlit e mapa"] --> S["Serviço de localização"]
+    UI["Streamlit e mapa"] --> N["Modo nativo ou demonstração"]
+    UI --> C["Cliente HTTP no container"]
+    N --> S["Controller"]
+    C --> A["Agente autenticado no Windows"]
+    A --> S
     S --> D["Modelos e validação"]
-    S --> P["Contrato DeviceGateway"]
+    S --> P["Contrato Gateway"]
     P --> R["Adaptador pymobiledevice3"]
     P --> F["Adaptador de demonstração"]
     R --> U["Transporte USB"]
@@ -20,9 +24,10 @@ flowchart TD
 - UI: renderizar, receber eventos, exibir estado. Sem comandos de dispositivo em funções de desenho.
 - Domínio: coordenadas, estados, operações e validação independente de bibliotecas externas.
 - Serviço: autorizar operação conforme estado, bloquear concorrência, atribuir ID e timeout, atualizar resultado.
-- Gateway: descobrir, conectar, enviar, encerrar e desconectar; mapear erros técnicos.
-- Adaptador real: escolher APIs/CLI documentadas e compatíveis após prova de viabilidade.
-- Adaptador falso: reproduzir sucesso, falha, timeout e desconexão sem hardware.
+- Gateway: descobrir e verificar dispositivo, aplicar/encerrar simulação e fechar o worker; mapear erros técnicos. Controller fornece conexão, desconexão, bloqueio e deduplicação.
+- AgentClient: traduz as operações da interface para o agente HTTP; o Controller do agente centraliza o estado entre clientes.
+- Adaptador real: CLI pymobiledevice3 11.20.2 com worker persistente. O contrato foi implementado, mas compatibilidade com hardware permanece pendente.
+- Adaptador de demonstração: descoberta e sucesso sem hardware. Os testes substituem esse adaptador para provocar falhas, timeout e concorrência.
 
 ## Streamlit e efeitos externos
 
@@ -42,9 +47,11 @@ src/quickmapgo/
   remote.py
   ui/map/
 tests/
-  unit/
-  integration/
-  manual/
+  test_core.py
+  test_agent.py
+  test_device.py
+  test_app.py
+  map_events.test.cjs
 .streamlit/config.toml
 pyproject.toml
 docs/
