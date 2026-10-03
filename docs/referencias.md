@@ -15,3 +15,12 @@ Consultadas em 02/10/2026. Páginas upstream podem mudar; registrar versão/tag 
 ## Limites da pesquisa
 
 Não foi obtida evidência específica de funcionamento no aparelho do usuário. A confirmação depende da matriz de testes real. Nenhuma versão fixa de pacote ou receita universal de instalação é estabelecida por esta documentação.
+
+## Referências da implementação
+
+- [Componentes Streamlit](https://docs.streamlit.io/develop/concepts/custom-components/components-v1/intro): integração bidirecional.
+- [Leaflet](https://leafletjs.com/reference.html): mapa e eventos.
+- [Rede Docker Desktop](https://docs.docker.com/desktop/features/networking/): container, host e publicação de portas.
+- [Código pymobiledevice3](https://github.com/doronz88/pymobiledevice3): CLI DVT e comportamento de wait_return consultados no desenvolvimento.
+
+Versões diretas fixadas nesta implementação: Streamlit 1.65.0, pymobiledevice3 11.20.2, Leaflet 1.9.4. Fixação permite reproduzir o contrato do código; não equivale a aprovação física no iOS alvo.

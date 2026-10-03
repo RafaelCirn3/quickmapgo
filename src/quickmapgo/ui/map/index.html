@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    body { margin:0; font-family:system-ui,sans-serif; color:#172b3a; }
+    #map { height:500px; border-radius:14px; background:#e7edf1; }
+    #notice { padding:10px 4px; font-size:14px; }
+    #map.blocked { cursor:not-allowed; }
+  </style>
+</head>
+<body>
+  <div id="map" aria-label="Mapa interativo de localização"></div>
+  <div id="notice" role="status">Carregando mapa…</div>
+  <script>
+    const post = (type, data={}) => parent.postMessage({isStreamlitMessage:true,type,...data}, '*');
+    let args={}, map=null, marker=null, awaiting=false, currentEvent=null, pendingInstruction=null;
+    const labels={pending:'Enviando',sent:'Enviado',failed:'Falhou',uncertain:'Incerto'};
+    const colors={pending:'#d18a16',sent:'#188569',failed:'#bd374a',uncertain:'#697b88'};
+    const notice=document.getElementById('notice');
+    function repaint() {
+      if (!map) return;
+      const op=awaiting ? pendingInstruction : args.last_attempt;
+      if (op && op.coordinate) {
+        const c=op.coordinate;
+        if (marker) map.removeLayer(marker);
+        marker=L.circleMarker([c.latitude,c.longitude],{
+          radius:11,color:colors[op.status]||colors.uncertain,fillOpacity:0.8,weight:3
+        }).addTo(map);
+        const text=document.createElement('span');
+        text.textContent=`${labels[op.status]||'Incerto'} · ${c.latitude.toFixed(6)}, ${c.longitude.toFixed(6)}`;
+        marker.bindTooltip(text);
+      }
+      const blocked=!args.connected || awaiting;
+      document.getElementById('map').classList.toggle('blocked',blocked);
+      notice.textContent=awaiting ? 'Enviando instrução…' : args.connected
+        ? 'Clique no mapa para enviar uma instrução. Arraste para navegar.'
+        : 'Conecte um dispositivo antes de clicar no mapa.';
+    }
+    function startMap() {
+      map=L.map('map',{worldCopyJump:true}).setView([-7.115,-34.864],13);
+      const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      tiles.on('tileerror',()=>{notice.textContent='Tiles indisponíveis. Verifique a internet.';});
+      map.on('click', event=>{
+        if (!args.connected || awaiting) return;
+        // Um ID por gesto, inclusive se as coordenadas forem iguais às anteriores.
+        currentEvent=crypto.randomUUID(); awaiting=true;
+        const longitude=((event.latlng.lng+180)%360+360)%360-180;
+        pendingInstruction={coordinate:{latitude:event.latlng.lat,longitude},status:'pending'};
+        post('streamlit:setComponentValue',{value:{event_id:currentEvent,
+          latitude:event.latlng.lat,longitude},dataType:'json'});
+        repaint();
+      });
+      repaint();
+    }
+    window.addEventListener('message',event=>{
+      if (event.source!==parent || event.data.type!=='streamlit:render') return;
+      args=event.data.args;
+      if (args.consumed_event===currentEvent) awaiting=false;
+      repaint();
+      if (map) setTimeout(()=>map.invalidateSize(),0);
+      post('streamlit:setFrameHeight',{height:550});
+    });
+    post('streamlit:componentReady',{apiVersion:1});
+    post('streamlit:setFrameHeight',{height:550});
+  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" onload="startMap()"
+    onerror="document.getElementById('notice').textContent='Não foi possível carregar o mapa. Verifique a internet.'"></script>
+</body>
+</html>

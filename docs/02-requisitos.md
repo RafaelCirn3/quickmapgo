@@ -1,6 +1,6 @@
 # Requisitos e critérios de aceite
 
-Todos os requisitos estão planejados, sem implementação. P0 = essencial ao MVP; P1 = apoio ao desenvolvimento.
+Os requisitos abaixo definem o alvo do MVP. A versão inicial implementa os fluxos em demonstração e o adaptador experimental; critérios com hardware permanecem pendentes. Consultar o relatório de validação. P0 = essencial ao MVP; P1 = apoio ao desenvolvimento.
 
 ## Funcionais
 
@@ -27,7 +27,7 @@ Todos os requisitos estão planejados, sem implementação. P0 = essencial ao MV
 | RNF02 | Vincular servidor a 127.0.0.1; não exigir exposição pública para conexão Wi-Fi do aparelho |
 | RNF03 | Não versionar registros de pareamento, identificadores completos, logs privados ou coordenadas reais |
 | RNF04 | Uma operação mutável por dispositivo de cada vez, inclusive entre abas do navegador |
-| RNF05 | Timeout inicial proposto de 15 s, configurável e revisado após a prova; sem repetição automática de set/clear |
+| RNF05 | Timeout de 30 s por subprocesso iOS nesta versão, revisado após a prova; sem repetição automática de set/clear |
 | RNF06 | Reexecução do Streamlit, zoom, arraste ou atualização visual não podem repetir comandos |
 | RNF07 | Mapas dependem de internet conforme provedor; falha de tiles deve manter controles/status utilizáveis |
 | RNF08 | Código de interface não depende diretamente das APIs de iOS; o adaptador é substituível em testes |

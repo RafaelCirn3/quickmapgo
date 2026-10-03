@@ -1,6 +1,6 @@
-# Modelos e contratos propostos
+# Modelos e contratos
 
-Modelos de domínio em memória, sem esquema de banco neste MVP.
+Modelos de domínio em memória, sem esquema de banco neste MVP. Esta é a especificação conceitual; a versão inicial usa Coordinate e Controller com snapshots em dicionários em core.py, sem criar classes para cada linha da tabela.
 
 | Modelo | Campos | Invariantes |
 | --- | --- | --- |
@@ -11,7 +11,7 @@ Modelos de domínio em memória, sem esquema de banco neste MVP.
 | SimulationSession | last_attempt, last_success, simulation_state | Nunca substituir last_success por tentativa falha |
 | OperationResult | status, message, error_code | Nenhum campo promete aceitação pelo consumidor |
 
-Datas de operações devem ser timezone-aware, armazenadas em UTC e exibidas no horário local com indicação do fuso. Usar biblioteca padrão quando suficiente; tipo concreto será escolhido na implementação.
+Datas de operações devem ser timezone-aware, armazenadas em UTC e exibidas no horário local com indicação do fuso. Usar biblioteca padrão quando suficiente; Coordinate é dataclass; demais estruturas são dicionários nesta versão.
 
 ## Estados
 
@@ -42,7 +42,7 @@ stateDiagram-v2
 | clear_location | connection, operation_id | OperationResult |
 | disconnect | connection | resultado de encerramento da conexão |
 
-Contrato não assume uma assinatura da biblioteca. O adaptador traduz o contrato para a versão validada de pymobiledevice3. Não implementar REST endpoints apenas para representar essas operações.
+Contrato não assume uma assinatura da biblioteca. O adaptador traduz para a versão fixada de pymobiledevice3, ainda sem validação física. Não implementar REST endpoints apenas para representar essas operações.
 
 ## Erros normalizados
 

@@ -41,6 +41,6 @@ Estados do marcador: pendente (âmbar), enviado (verde), falhou (vermelho), ince
 
 Sem instruções: “Clique no mapa após conectar um dispositivo”. Em demonstração: “Demonstração: nenhuma instrução enviada ao iPhone”.
 
-## Decisão a validar no protótipo
+## Decisão adotada na implementação
 
-Verificar se streamlit-folium distingue eventos novos na mesma coordenada. Se retornar somente o último ponto, criar uma camada de eventos com ID ou reset explícito, preservando o requisito de clique imediato. Não adotar deduplicação permanente por coordenada.
+O componente próprio com Leaflet gera UUID por gesto. Durante o envio ele bloqueia novos cliques até o evento ser consumido. Reexecuções recebem o mesmo ID e não repetem a operação. Ver ADR 0002.

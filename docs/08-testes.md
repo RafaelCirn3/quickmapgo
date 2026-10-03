@@ -1,6 +1,6 @@
 # Estratégia de testes
 
-Não há testes executáveis nesta etapa documental. Este plano orienta a implementação.
+Há testes executáveis em tests/ para domínio, agente HTTP, adaptador com substitutos e carregamento Streamlit. A matriz abaixo também inclui verificações manuais ainda pendentes; ver relatório inicial.
 
 | Teste | Tipo | Requisitos | Resultado esperado |
 | --- | --- | --- | --- |

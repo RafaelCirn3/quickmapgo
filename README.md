@@ -1,58 +1,87 @@
 # QuickMapGo
 
-Painel local em Python para selecionar coordenadas em um mapa visto de cima e solicitar simulação de localização em um iPhone conectado ao Windows por USB ou Wi-Fi.
+Painel local em Python/Streamlit para escolher uma posição num mapa e solicitar simulação de localização em um iPhone conectado ao Windows por **USB ou Wi-Fi**.
 
-**Estado: engenharia de software inicial. Não há aplicação implementada nem compatibilidade comprovada com o iOS 26.6.2 ou com o Pokémon GO.**
+**Versão inicial implementada. Demonstração disponível; integração física com iOS 26.6.2 e Pokémon GO ainda não validada.**
 
-## Comportamento pretendido
+## Iniciar com Docker Compose
 
-1. Abrir o painel no navegador do Windows.
-2. Selecionar um iPhone e a conexão USB ou Wi-Fi.
-3. Clicar no mapa para enviar latitude e longitude.
-4. Exibir um marcador da última instrução, suas coordenadas, horário e resultado.
-5. Solicitar o encerramento da simulação.
+Com Docker Desktop em execução, na pasta do projeto:
 
-A comunicação envia instruções ao serviço de desenvolvimento do iPhone; não transmite um sinal de satélite GPS. O objetivo de uso informado é o Pokémon GO, cuja aceitação das coordenadas deve ser avaliada separadamente da conexão e do envio.
+```powershell
+Copy-Item .env.example .env
+docker compose up --build -d
+```
 
-## Stack definida e candidata
+Abrir http://127.0.0.1:8501. Atualizar dispositivos, conectar o aparelho de demonstração e clicar no mapa. O modo padrão não envia instruções a um iPhone real.
 
-| Componente | Escolha | Situação |
-| --- | --- | --- |
-| Interface local | Streamlit | Definida pelo usuário |
-| Mapa | Folium + streamlit-folium | Candidata; validar eventos de clique |
-| Comunicação iOS | pymobiledevice3 | Candidata; validar no aparelho real |
-| Execução | Python no Windows, navegador local | Definida |
-| Transportes | USB e Wi-Fi | Requisitos obrigatórios do MVP |
-| Persistência | Memória durante a execução | Proposta inicial |
+```powershell
+docker compose ps
+docker compose logs -f web
+docker compose down
+```
 
-Não há necessidade inicial de React, Angular ou FastAPI. Versões serão fixadas após a prova de viabilidade.
+## Funcionalidades iniciais
+
+- Streamlit em português, mapa Leaflet visto de cima, zoom e navegação.
+- Clique com ID único: novos cliques no mesmo ponto são permitidos, reruns não repetem envio.
+- Marcador da última tentativa, coordenadas, horário e resultado.
+- Último sucesso separado da tentativa que falhou.
+- Seleção USB/Wi-Fi, descoberta, conexão e encerramento.
+- Adaptador de demonstração, adaptador iOS experimental e agente Windows autenticado.
+- Bloqueio de operações simultâneas e timeout sem retry automático.
+- Testes e CI para Python e build/healthcheck do Compose.
+
+## Docker e iPhone
+
+O container executa o **painel**. Drivers e serviços Apple permanecem no Windows. Para um aparelho real, usar execução nativa ou painel Docker + agente nativo Windows. Não há passagem USB automática para container Linux nem serviço privilegiado.
+
+O envio ao serviço não comprova aceitação pelo Pokémon GO. A conexão exibida confirma descoberta no transporte; a aplicação de coordenadas depende dos serviços de desenvolvimento do aparelho.
+
+## Executar nativamente no Windows
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+$env:QUICKMAPGO_MODE = "demo"
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+Consultar o [guia Windows/Docker](docs/09-execucao-windows-docker.md) para o extra device, agente, token e configuração USB/Wi-Fi. O mapa depende de internet para carregar Leaflet e tiles OpenStreetMap.
+
+## Stack
+
+| Componente | Implementação |
+| --- | --- |
+| UI | Streamlit 1.65.0 |
+| Mapa | Componente bidirecional próprio + Leaflet 1.9.4 |
+| iOS | pymobiledevice3 11.20.2, adaptador experimental com worker persistente |
+| Ponte Docker/Windows | Agente HTTP da biblioteca padrão, autenticado por token |
+| Estado | Memória do processo; sem banco |
+| Execução | Python 3.12+, Windows ou painel Linux em Docker |
+
+Folium/streamlit-folium foram candidatas iniciais; a decisão final está na ADR 0002. Dependências diretas estão fixadas; as transitivas ainda não têm lockfile.
 
 ## Documentação
 
 - [Visão e escopo](docs/01-visao-escopo.md)
-- [Requisitos e critérios de aceite](docs/02-requisitos.md)
+- [Requisitos e aceite](docs/02-requisitos.md)
 - [Casos de uso e interface](docs/03-casos-de-uso-interface.md)
 - [Arquitetura](docs/04-arquitetura.md)
 - [Modelos e contratos](docs/05-modelos-contratos.md)
-- [Viabilidade, riscos e compatibilidade](docs/06-viabilidade-riscos.md)
+- [Viabilidade e riscos](docs/06-viabilidade-riscos.md)
 - [Plano de desenvolvimento](docs/07-plano-desenvolvimento.md)
-- [Estratégia de testes](docs/08-testes.md)
-- [Decisões de arquitetura](docs/adr/0001-aplicacao-local-streamlit.md)
-- [Referências técnicas](docs/referencias.md)
+- [Testes](docs/08-testes.md)
+- [Execução Windows/Docker](docs/09-execucao-windows-docker.md)
+- [ADR 0001](docs/adr/0001-aplicacao-local-streamlit.md)
+- [ADR 0002](docs/adr/0002-docker-agente-e-eventos.md)
+- [Referências](docs/referencias.md)
 - [Contribuição](CONTRIBUTING.md)
 
-## Primeira etapa
+## Validação e próximos passos
 
-Executar a prova de viabilidade descrita em [viabilidade e riscos](docs/06-viabilidade-riscos.md), começando pelo USB e depois pelo Wi-Fi. Registrar evidências antes de implementar o adaptador real.
-
-Ainda não existem `app.py`, dependências fixadas ou instalador. O comando **planejado**, disponível apenas após a implementação, é:
-
-```powershell
-python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501
-```
-
-Endereço planejado: http://127.0.0.1:8501. Wi-Fi refere-se à comunicação Windows–iPhone; o painel continua local.
+Validar USB e Wi-Fi no ambiente real, registrar versões/builds e comportamento no consumidor. O modo demonstração e os testes automatizados não substituem essa prova. Consultar [relatório da implementação](docs/10-validacao-inicial.md) para evidências e pendências.
 
 ## Histórico
 
-- 02/10/2026 (America/Fortaleza): documentação inicial, requisitos, modelos, decisões e plano de validação.
+- 02/10/2026 (America/Fortaleza): engenharia inicial e primeira implementação com Streamlit, Docker Compose, agente e testes.

@@ -21,9 +21,9 @@ Sem prazo fechado antes da prova física.
 - [ ] Validar Wi-Fi sem cabo após pareamento.
 - [ ] Verificar evento streamlit-folium: rerun, zoom e clique repetido na mesma coordenada.
 - [ ] Fixar dependências compatíveis e escolher integração API/CLI no adaptador.
-- [ ] Implementar modelos e gateway falso.
-- [ ] Implementar interface com processamento de evento único.
-- [ ] Integrar hardware com bloqueio e timeout.
+- [x] Implementar modelos e gateway falso.
+- [x] Implementar interface inicial com processamento de evento único.
+- [ ] Validar o adaptador experimental com hardware; bloqueio e timeout já implementados.
 - [ ] Executar matriz de testes e documentar limites observados.
 
 ## Definition of Ready
@@ -34,6 +34,6 @@ Tarefa possui requisito vinculado, comportamento esperado, dependências e forma
 
 Critérios da tarefa demonstrados; testes pertinentes executados; erros relevantes tratados; documentação coerente; nenhum dado privado versionado. Tarefas de integração não ficam concluídas apenas com mock. MVP não fica concluído sem USB e Wi-Fi.
 
-## Entrega desta etapa
+## Estado atual
 
-Somente Markdown e modelos de trabalho. Não criar implementação, instalador ou promessas de compatibilidade nesta entrega. A próxima atividade é E1.
+E0 concluída. E2 e E3 implementadas em versão inicial, com validação descrita no relatório. E4 tem adaptador experimental que deve ser validado fisicamente; não está concluída. E1 continua pendente para hardware. E5/E6 têm base de testes, Docker e guia, mas o MVP depende da matriz USB/Wi-Fi real.

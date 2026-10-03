@@ -2,7 +2,7 @@
 
 ## Fluxo proposto
 
-Usar main como referência estável; trabalho futuro em branches docs/, feat/ ou fix/, com PR de escopo pequeno. A documentação inicial pode ser gravada diretamente em main conforme solicitação de preparação. Proteções de branch não foram configuradas nesta etapa.
+Usar main como referência estável; trabalho futuro em branches docs/, feat/ ou fix/, com PR de escopo pequeno. A preparação e implementação inicial são publicadas em main conforme solicitação; evolução posterior pode usar branches e PRs. Proteções de branch não foram configuradas nesta etapa.
 
 Antes de implementar hardware, consultar a prova de viabilidade. Não substituir Streamlit nem remover USB/Wi-Fi sem atualizar decisão e requisitos.
 

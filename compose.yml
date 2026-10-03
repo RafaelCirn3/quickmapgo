@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:${QUICKMAPGO_PORT:-8501}:8501"
+    environment:
+      QUICKMAPGO_MODE: "${QUICKMAPGO_MODE:-demo}"
+      QUICKMAPGO_AGENT_URL: "${QUICKMAPGO_AGENT_URL:-http://host.docker.internal:8765}"
+      QUICKMAPGO_AGENT_TOKEN: "${QUICKMAPGO_AGENT_TOKEN:-}"
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

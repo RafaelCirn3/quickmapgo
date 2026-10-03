@@ -1,4 +1,4 @@
-# Arquitetura proposta
+# Arquitetura da versão inicial
 
 Aplicação local em camadas leves, dentro de um único projeto Python. Streamlit apresenta a UI; serviços coordenam operações; um adaptador encapsula pymobiledevice3.
 
@@ -28,17 +28,19 @@ flowchart TD
 
 O script é reexecutado por interações. Guardar estado de apresentação e eventos já consumidos em session_state. Recursos e bloqueio de dispositivo devem ser controlados por um gerenciador no processo, para evitar conflito entre abas/sessões. Não cachear funções que enviam ou encerram simulação.
 
-Preservar ID do evento durante reruns. Alterar zoom/centro sem disparar envio. Falhas/timeout não provocam retry automático. Evitar chamadas longas dentro da renderização; escolher a estratégia de worker após medir o adaptador e validar atualização de estado na thread apropriada.
+Preservar ID do evento durante reruns. Alterar zoom/centro sem disparar envio. Falhas/timeout não provocam retry automático. As chamadas são síncronas nesta versão inicial, com spinner, timeout e bloqueio; worker persistente mantém o contexto iOS. A responsividade com hardware precisa ser medida.
 
-## Estrutura planejada (ainda não criada)
+## Estrutura implementada
 
 ```text
 app.py
 src/quickmapgo/
-  domain/
-  services/
-  adapters/
-  ui/
+  core.py
+  device.py
+  device_worker.py
+  agent.py
+  remote.py
+  ui/map/
 tests/
   unit/
   integration/
@@ -48,7 +50,7 @@ pyproject.toml
 docs/
 ```
 
-Não criar banco, API HTTP adicional ou infraestrutura de nuvem neste estágio. A configuração futura explicitará endereço local e porta 8501. Bibliotecas de iOS podem usar serviços/túneis auxiliares; o painel deve distinguir essas necessidades do seu próprio servidor local.
+Sem banco ou nuvem. A ADR 0002 introduz agente HTTP autenticado no Windows para atender ao painel Docker. A configuração explicita endereço local e porta 8501. Bibliotecas de iOS podem usar serviços/túneis auxiliares; o painel deve distinguir essas necessidades do seu próprio servidor local.
 
 ## Ciclo de vida
 
